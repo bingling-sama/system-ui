@@ -1,11 +1,24 @@
-// colors
+// Base Colors
 $white: #ffffff;
 $black: #000000;
 $grey: #a5a5a5;
-$dark-grey: #333333;
+$darkgrey: #b6b7b8;
 
-// theme tokens
-$primary: $white;
-$secondary: $black;
-$tertiary: $grey;
-$disabled: $dark-grey;
+// System Colors
+$sys-color-white: $white;
+$sys-color-black: $black;
+$sys-color-grey: $grey;
+$sys-color-darkgrey: $darkgrey;
+
+// Theme Tokens
+$primary: $sys-color-white;
+$secondary: $sys-color-black;
+$tertiary: $sys-color-grey;
+$disabled: $sys-color-darkgrey;
+
+// Spacing
+$element-spacing: 8px;
+$grouped-element-spacing: 6px;
+
+// Other
+$box-shadow: 2px 2px;

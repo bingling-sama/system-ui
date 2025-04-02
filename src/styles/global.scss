@@ -2,28 +2,32 @@
 @font-face {
   font-family: Chicago;
   font-display: swap;
-  src: url('fonts/ChicagoFLF.woff') format('woff');
-  src: url('fonts/ChicagoFLF.woff2') format('woff2');
+  src:
+    url('../assets/fonts/ChicagoFLF.woff') format('woff'),
+    url('../assets/fonts/ChicagoFLF.woff2') format('woff2');
 }
 
 @font-face {
   font-family: Monaco;
   font-display: swap;
-  src: url('fonts/monaco.woff') format('woff');
-  src: url('fonts/monaco.woff2') format('woff2');
+  src:
+    url('../assets/fonts/monaco.woff') format('woff'),
+    url('../assets/fonts/monaco.woff2') format('woff2');
 }
 
 /* Fonts below are recreations by Giles Booth */
 @font-face {
   font-family: Chicago_12;
   font-display: swap;
-  src: url('fonts/ChiKareGo2.woff') format('woff');
-  src: url('fonts/ChiKareGo2.woff2') format('woff2');
+  src:
+    url('../assets/fonts/ChiKareGo2.woff') format('woff'),
+    url('../assets/fonts/ChiKareGo2.woff2') format('woff2');
 }
 
 @font-face {
   font-family: Geneva_9;
   font-display: swap;
-  src: url('fonts/FindersKeepers.woff') format('woff');
-  src: url('fonts/FindersKeepers.woff2') format('woff2');
+  src:
+    url('../assets/fonts/FindersKeepers.woff') format('woff'),
+    url('../assets/fonts/FindersKeepers.woff2') format('woff2');
 }
