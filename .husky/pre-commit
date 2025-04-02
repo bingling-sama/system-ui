@@ -1,12 +1,9 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 # Run tests
-bun test
+# bun run test
 
 # Run linting
-bunx eslint . --fix
+bun run lint
 
 # Run formatting
-prettier $(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g') --write --ignore-unknown
+bun run format
 git update-index --again

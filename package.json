@@ -1,22 +1,41 @@
 {
   "name": "system-ui",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
   "repository": {
     "type": "git",
     "url": "git@github.com:bingling-sama/system-ui.git"
   },
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "prepare": "husky",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./style": "./dist/style.css"
   },
-  "dependencies": {
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build:js": "vite build",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:css": "sass src/styles/global.scss dist/style.css --no-source-map",
+    "build": "bun run build:js && bun run build:types && bun run build:css",
+    "build-storybook": "storybook build",
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "format": "prettier --write .",
+    "prepare": "husky",
+    "prepack": "bun run build"
+  },
+  "peerDependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -53,8 +72,6 @@
   },
   "eslintConfig": {
     "extends": [
-      "plugin:storybook/recommended",
-      "plugin:storybook/recommended",
       "plugin:storybook/recommended"
     ]
   }
