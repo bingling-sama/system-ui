@@ -5,6 +5,13 @@ import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@use '@/styles/variables' as *;`,
+      },
+    },
+  },
   build: {
     lib: {
       entry: 'src/index.ts',
