@@ -32,7 +32,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 2px $element-spacing/2;
+    padding: 2px calc($element-spacing/2);
     background-color: $secondary;
     color: $primary;
   }

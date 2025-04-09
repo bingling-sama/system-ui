@@ -64,7 +64,7 @@
     z-index: 100;
 
     .menu-item {
-      padding: $element-spacing/2 $element-spacing;
+      padding: calc($element-spacing/2) $element-spacing;
       display: block;
       width: 100%;
       box-sizing: border-box;
