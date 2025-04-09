@@ -1,0 +1,55 @@
+.tabs {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-family: Chicago_12;
+}
+
+.tabs-nav {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color: $primary;
+  border-bottom: 1px solid $secondary;
+  position: relative;
+  user-select: none;
+  width: 100%;
+}
+
+.tabs-nav-item {
+  display: flex;
+  align-items: center;
+  padding: 2px $element-spacing;
+  cursor: pointer;
+  color: $secondary;
+  position: relative;
+
+  &:hover {
+    background-color: $secondary;
+    color: $primary;
+  }
+
+  &--active {
+    background-color: $secondary;
+    color: $primary;
+  }
+
+  &--disabled {
+    color: $disabled;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: $primary;
+      color: $disabled;
+    }
+  }
+}
+
+.tabs-content {
+  padding: $element-spacing;
+  border: 1px solid $secondary;
+  border-top: none;
+  background-color: $primary;
+  color: $secondary;
+}

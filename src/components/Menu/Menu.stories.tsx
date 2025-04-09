@@ -1,8 +1,7 @@
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Menu, MenuItem, SubMenu } from './';
 
-const meta = {
+const meta: Meta<typeof Menu> = {
   title: 'Components/Menu',
   component: Menu,
   parameters: {
@@ -16,7 +15,7 @@ const meta = {
       </div>
     ),
   ],
-} satisfies Meta<typeof Menu>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

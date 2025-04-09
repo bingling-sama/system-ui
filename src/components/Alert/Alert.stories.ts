@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import { Alert } from './';
 
-const meta = {
+const meta: Meta<typeof Alert> = {
   title: 'Components/Alert',
   component: Alert,
   parameters: {
@@ -10,7 +10,7 @@ const meta = {
   },
   tags: ['autodocs'],
   args: { onClose: fn() },
-} satisfies Meta<typeof Alert>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
