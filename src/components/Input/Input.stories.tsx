@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import Input from './Input';
+import * as React from 'react';
 
 const meta: Meta<typeof Input> = {
   title: 'Components/Input',
@@ -62,4 +63,66 @@ export const SmallSize: Story = {
     placeholder: 'Small input',
     size: 'sm',
   },
+};
+
+export const WithAutocomplete: Story = {
+  args: {
+    placeholder: 'Type your name',
+    autocomplete: 'name',
+  },
+};
+
+export const WithAutocompleteOff: Story = {
+  args: {
+    placeholder: 'No autocomplete',
+    autocomplete: 'off',
+  },
+};
+
+export const WithCustomSuggestions: Story = {
+  args: {
+    placeholder: 'Type a fruit',
+    suggestions: [
+      'Apple',
+      'Banana',
+      'Cherry',
+      'Durian',
+      'Elderberry',
+      'Fig',
+      'Grape',
+      'Honeydew',
+    ],
+    onSelectSuggestion: fn(),
+  },
+};
+
+const WithFilteredSuggestionsComponent = () => {
+  const [value, setValue] = React.useState('');
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  return (
+    <div style={{ width: '300px' }}>
+      <Input
+        placeholder="Type 'a' to see suggestions"
+        value={value}
+        onChange={handleChange}
+        suggestions={[
+          'Apple',
+          'Apricot',
+          'Avocado',
+          'Banana',
+          'Blackberry',
+          'Blueberry',
+          'Cherry',
+        ]}
+        onSelectSuggestion={val => console.log(`Selected: ${val}`)}
+      />
+    </div>
+  );
+};
+
+export const WithFilteredSuggestions: Story = {
+  render: () => <WithFilteredSuggestionsComponent />,
 };
