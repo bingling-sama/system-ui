@@ -1,0 +1,198 @@
+.select-wrapper {
+  position: relative;
+  width: 100%;
+  font-family: Chicago_12;
+  user-select: none;
+
+  .select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 4px 8px;
+    font-size: 14px;
+    color: $secondary;
+    background-color: $primary;
+    border: 1px solid $secondary;
+    box-shadow: $box-shadow;
+    cursor: pointer;
+    position: relative;
+
+    &--open {
+      border-color: $secondary;
+    }
+  }
+
+  .select-value {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .select-arrow {
+    width: 0;
+    height: 0;
+    margin-left: 8px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid $secondary;
+  }
+
+  .select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background-color: $primary;
+    border: 1px solid $secondary;
+    border-top: none;
+    box-shadow: $box-shadow;
+    z-index: 10;
+    font-family: Chicago_12;
+    font-size: 14px;
+  }
+
+  .select-option {
+    padding: 4px 8px;
+    cursor: pointer;
+    color: $secondary;
+    display: flex;
+    align-items: center;
+
+    &:hover:not(.select-option--disabled) {
+      background-color: $secondary;
+      color: $primary;
+
+      .select-option-checkbox input[type='checkbox'] {
+        border-color: $primary;
+      }
+    }
+
+    &--selected {
+      font-weight: bold;
+    }
+
+    &--highlighted {
+      background-color: $secondary;
+      color: $primary;
+
+      .select-option-checkbox input[type='checkbox'] {
+        border-color: $primary;
+      }
+    }
+
+    &--disabled {
+      color: $disabled;
+      cursor: not-allowed;
+
+      .select-option-checkbox input[type='checkbox'] {
+        border-color: $disabled;
+      }
+    }
+  }
+
+  .select-option-checkbox {
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+
+    input[type='checkbox'] {
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border: 1px solid $secondary;
+      background-color: $primary;
+      position: relative;
+      cursor: pointer;
+
+      &:checked {
+        background-color: $primary;
+
+        &:after {
+          content: '';
+          position: absolute;
+          left: 4px;
+          top: 1px;
+          width: 4px;
+          height: 8px;
+          border: solid $secondary;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+        }
+      }
+    }
+  }
+
+  .select-option-label {
+    flex-grow: 1;
+  }
+
+  .select-native {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  &:focus {
+    outline: none;
+
+    .select-trigger {
+      border-color: $secondary;
+    }
+  }
+}
+
+.select-size-lg {
+  .select-trigger {
+    padding: 8px 12px;
+    font-size: 16px;
+  }
+
+  .select-dropdown {
+    font-size: 16px;
+  }
+
+  .select-option {
+    padding: 8px 12px;
+  }
+}
+
+.select-size-sm {
+  .select-trigger {
+    padding: 2px 6px;
+    font-size: 12px;
+  }
+
+  .select-dropdown {
+    font-size: 12px;
+  }
+
+  .select-option {
+    padding: 2px 6px;
+  }
+}
+
+.is-disabled {
+  .select-trigger {
+    background-color: $primary;
+    border-color: $disabled;
+    color: $disabled;
+    cursor: not-allowed;
+  }
+
+  .select-arrow {
+    border-top-color: $disabled;
+  }
+}
