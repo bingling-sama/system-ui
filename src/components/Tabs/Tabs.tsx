@@ -70,13 +70,27 @@ function renderTabContent(
   return null;
 }
 
+function findDefaultActiveKey(children: React.ReactNode): string | undefined {
+  for (const child of React.Children.toArray(children)) {
+    if (isFragmentElement(child)) {
+      const key = findDefaultActiveKey(child.props.children);
+      if (key !== undefined) return key;
+    } else if (isTabItemElement(child) && !child.props.disabled) {
+      return child.props.itemKey;
+    }
+  }
+  return undefined;
+}
+
 export default function Tabs({
   defaultActiveKey,
   onSelect,
   children,
   className = '',
 }: TabsProps) {
-  const [activeKey, setActiveKey] = useState(defaultActiveKey || '');
+  const [activeKey, setActiveKey] = useState(
+    () => defaultActiveKey ?? findDefaultActiveKey(children) ?? ''
+  );
 
   const handleSelect = (key: string) => {
     setActiveKey(key);
