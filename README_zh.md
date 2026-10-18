@@ -2,6 +2,18 @@
 
 一个带有苹果 System OS 风格的 React 组件库。
 
+## 使用方式
+
+在应用入口导入一次完整样式：
+
+```tsx
+import { Button } from 'system-ui';
+import 'system-ui/style';
+```
+
+`system-ui/style` 是唯一的公开 CSS 入口，对应
+`dist/style.css`，包含全局样式、字体及所有已导出组件的样式。
+
 ## 灵感来源
 
 本项目的灵感来自
