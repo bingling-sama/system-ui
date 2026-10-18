@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 .upload-wrapper {
   font-family: Chicago_12;
   width: 100%;
@@ -31,7 +33,7 @@
 
   &.is-dragging {
     border-color: $secondary;
-    background-color: darken($primary, 5%);
+    background-color: color.adjust($primary, $lightness: -5%);
   }
 
   .upload-drag-content {
