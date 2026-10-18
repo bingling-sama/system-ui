@@ -1,6 +1,6 @@
 'use client';
 
-import React, {
+import {
   useState,
   useRef,
   useEffect,
@@ -69,48 +69,38 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       onChange,
       className = '',
       style,
+      value,
+      defaultValue,
       ...restProps
     },
     ref
   ) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedIndices, setSelectedIndices] = useState<number[]>(() => {
-      if (multiple) {
-        // Handle multiple selection initialization
-        if (restProps.defaultValue) {
-          const defaultValues = Array.isArray(restProps.defaultValue)
-            ? restProps.defaultValue
-            : [restProps.defaultValue];
-          return defaultValues
-            .map(value => options.findIndex(option => option.value === value))
-            .filter(index => index >= 0);
-        }
-        if (restProps.value) {
-          const values = Array.isArray(restProps.value)
-            ? restProps.value
-            : [restProps.value];
-          return values
-            .map(value => options.findIndex(option => option.value === value))
-            .filter(index => index >= 0);
-        }
-        return [];
-      } else {
-        // Single selection initialization
-        if (restProps.defaultValue) {
-          const index = options.findIndex(
-            option => option.value === restProps.defaultValue
-          );
-          return index >= 0 ? [index] : [0];
-        }
-        if (restProps.value) {
-          const index = options.findIndex(
-            option => option.value === restProps.value
-          );
-          return index >= 0 ? [index] : [0];
-        }
-        return [0];
-      }
-    });
+    const normalizeValue = (value: SelectProps['value']): string[] =>
+      value === undefined
+        ? []
+        : (Array.isArray(value) ? value : [value]).map(String);
+    const [uncontrolledValues, setUncontrolledValues] = useState<
+      string[] | undefined
+    >(() =>
+      defaultValue === undefined ? undefined : normalizeValue(defaultValue)
+    );
+    const isControlled = value !== undefined;
+    const selectedValues = isControlled
+      ? normalizeValue(value)
+      : (uncontrolledValues ??
+        (multiple
+          ? []
+          : options
+              .filter(option => !option.disabled)
+              .slice(0, 1)
+              .map(option => option.value)));
+    const selectedIndices = selectedValues
+      .map(selectedValue =>
+        options.findIndex(option => option.value === selectedValue)
+      )
+      .filter(index => index >= 0)
+      .slice(0, multiple ? undefined : 1);
     const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
     const selectRef = useRef<HTMLDivElement>(null);
     const dropdownRef = useRef<HTMLUListElement>(null);
@@ -157,52 +147,24 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     };
 
     const handleOptionClick = (index: number) => {
-      if (options[index].disabled) return;
+      if (!options[index] || options[index].disabled) return;
 
-      if (multiple) {
-        // For multiple selection, toggle the selected state
-        setSelectedIndices(prevIndices => {
-          const isSelected = prevIndices.includes(index);
-          const newIndices = isSelected
-            ? prevIndices.filter(i => i !== index)
-            : [...prevIndices, index];
+      const newIndices = multiple
+        ? selectedIndices.includes(index)
+          ? selectedIndices.filter(i => i !== index)
+          : [...selectedIndices, index]
+        : [index];
+      const newValues = newIndices.map(i => options[i].value);
+      if (!isControlled) setUncontrolledValues(newValues);
+      if (!multiple) setIsOpen(false);
 
-          // Create a synthetic event to pass to onChange
-          if (onChange && selectRef.current) {
-            const selectedValues = newIndices.map(i => options[i].value);
-            const syntheticEvent = {
-              target: {
-                value: selectedValues,
-                name: restProps.name,
-                selectedOptions: newIndices.map(i => ({
-                  value: options[i].value,
-                })),
-              },
-            } as unknown as ChangeEvent<HTMLSelectElement>;
-
-            onChange(syntheticEvent);
-          }
-
-          return newIndices;
-        });
-        // Don't close dropdown for multiple selection
-      } else {
-        // For single selection
-        setSelectedIndices([index]);
-        setIsOpen(false);
-
-        // Create a synthetic event to pass to onChange
-        if (onChange && selectRef.current) {
-          const syntheticEvent = {
-            target: {
-              value: options[index].value,
-              name: restProps.name,
-            },
-          } as unknown as ChangeEvent<HTMLSelectElement>;
-
-          onChange(syntheticEvent);
-        }
-      }
+      onChange?.({
+        target: {
+          value: multiple ? newValues : newValues[0],
+          name: restProps.name,
+          selectedOptions: newValues.map(value => ({ value })),
+        },
+      } as unknown as ChangeEvent<HTMLSelectElement>);
     };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -354,6 +316,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
 
         {/* Hidden native select for form submission */}
         <select
+          {...restProps}
           ref={ref}
           name={restProps.name}
           disabled={disabled}
@@ -361,20 +324,30 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           value={
             multiple
               ? selectedIndices.map(i => options[i]?.value)
-              : options[selectedIndices[0]]?.value
+              : (options[selectedIndices[0]]?.value ?? '')
           }
-          onChange={onChange}
+          onChange={event => {
+            if (!isControlled) {
+              setUncontrolledValues(
+                Array.from(event.target.selectedOptions, option => option.value)
+              );
+            }
+            onChange?.(event);
+          }}
           className="select-native"
           aria-hidden="true"
           tabIndex={-1}
-          {...restProps}
         >
-          {options.map((option, index) => (
+          {!multiple &&
+            selectedIndices.length === 0 &&
+            !options.some(option => option.value === '') && (
+              <option value="" hidden disabled />
+            )}
+          {options.map(option => (
             <option
               key={option.value}
               value={option.value}
               disabled={option.disabled}
-              selected={selectedIndices.includes(index)}
             >
               {option.label}
             </option>
