@@ -11,8 +11,8 @@
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/types/index.d.ts"
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./style": "./dist/style.css"
   },
@@ -26,7 +26,7 @@
   "scripts": {
     "dev": "storybook dev -p 6006",
     "build:js": "vite build",
-    "build:types": "tsc --emitDeclarationOnly",
+    "build:types": "tsc --project tsconfig.build.json",
     "build": "bun run build:js && bun run build:types",
     "build-storybook": "storybook build",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
