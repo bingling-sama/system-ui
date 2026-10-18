@@ -91,3 +91,21 @@ system-ui/
 https://developer.apple.com/design/human-interface-guidelines
 
 https://sakofchit.github.io/system.css
+
+## 测试
+
+安装锁定的依赖和 Chromium 浏览器后，运行统一测试入口：
+
+```sh
+bun install --frozen-lockfile
+bun run test:install
+bun run test
+```
+
+测试使用 Playwright 的无头 Chromium 运行 Storybook 浏览器用例。 `bun install`
+不会下载浏览器；缺少浏览器时，测试入口会直接给出安装指引。升级 Playwright 后需要重新执行
+`bun run test:install`。
+
+Linux 和 CI 使用 `bunx playwright install --with-deps chromium`
+安装浏览器及系统依赖，仓库的浏览器测试工作流已包含此步骤。运行指定文件示例：
+`bun run test --project storybook src/components/Select/Select.stories.tsx`。

@@ -34,7 +34,10 @@
     "format": "prettier --write .",
     "prepare": "husky",
     "prepack": "bun run build",
-    "chromatic": "chromatic"
+    "chromatic": "chromatic",
+    "test": "bun run test:check-browser && vitest run",
+    "test:check-browser": "node scripts/check-browser.mjs",
+    "test:install": "playwright install chromium"
   },
   "peerDependencies": {
     "react": "^19.0.0",

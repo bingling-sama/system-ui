@@ -103,3 +103,23 @@ Also see:
 https://developer.apple.com/design/human-interface-guidelines
 
 https://sakofchit.github.io/system.css
+
+## Testing
+
+Install the locked dependencies and the Chromium browser before running tests:
+
+```sh
+bun install --frozen-lockfile
+bun run test:install
+bun run test
+```
+
+`bun run test` runs the Storybook browser tests in headless Chromium. The
+browser is a separate Playwright download and is not included in `bun install`.
+If it is missing, the test command prints installation instructions before
+running Vitest. After updating Playwright, run `bun run test:install` again.
+
+On Linux or CI, install Chromium and its system dependencies with
+`bunx playwright install --with-deps chromium`. The browser test workflow does
+this automatically. To run one story file, use
+`bun run test --project storybook src/components/Select/Select.stories.tsx`.
