@@ -1,0 +1,88 @@
+$font-size-base: 14px;
+$font-size-sm: 12px;
+$gray-6: #666;
+$gray-7: #333;
+$danger: #dc3545;
+
+@use '../../styles/variables' as *;
+
+.viking-form {
+  .viking-form-item {
+    margin-bottom: 24px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &.viking-form-horizontal {
+    .viking-form-item {
+      align-items: center;
+    }
+  }
+}
+
+.viking-form-item {
+  &-label {
+    font-size: $font-size-base;
+    color: $gray-7;
+    line-height: 32px;
+    font-weight: normal;
+  }
+
+  &-required {
+    color: $danger;
+    margin-right: 4px;
+    font-size: $font-size-base;
+    font-family: SimSun, sans-serif;
+  }
+
+  &-control {
+    position: relative;
+    min-height: 32px;
+    line-height: 32px;
+  }
+
+  &-error {
+    .input-inner,
+    .viking-select {
+      border-color: $danger;
+      &:focus,
+      &:hover {
+        border-color: $danger;
+      }
+    }
+  }
+
+  &-error-help {
+    position: absolute;
+    bottom: -22px;
+    left: 0;
+    line-height: 20px;
+  }
+
+  &-error-text {
+    color: $danger;
+    font-size: $font-size-sm;
+    min-height: 20px;
+  }
+
+  &-help {
+    color: $gray-6;
+    font-size: $font-size-sm;
+    margin-top: 4px;
+  }
+}
+
+// Form item with Input component
+.viking-form-item {
+  .input-wrapper {
+    margin: 0;
+  }
+}
+
+// Form item with Select component
+.viking-form-item {
+  .viking-select {
+    width: 100%;
+  }
+}
