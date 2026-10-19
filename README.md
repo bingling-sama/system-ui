@@ -2,6 +2,18 @@
 
 A styled React component library brings back Apple's System OS style.
 
+## Usage
+
+Import the library styles once in your application entry point:
+
+```tsx
+import { Button } from 'system-ui';
+import 'system-ui/style';
+```
+
+`system-ui/style` is the single public CSS entry. It includes the global styles,
+fonts and all exported component styles in `dist/style.css`.
+
 ## Inspiration
 
 This project is inspired by [System UI](https://system-ui.com/), which is a
