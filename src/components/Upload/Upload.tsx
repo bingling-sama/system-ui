@@ -174,77 +174,89 @@ export const Upload: React.FC<UploadProps> = ({
     setIsDragging(isDragging);
   };
 
-  // Upload files
+  // Each callback receives an immutable snapshot of the file's current status.
   const uploadFiles = (files: File[]) => {
     files.forEach(file => {
-      if (maxSize && file.size > maxSize) {
-        // File is too large
-        const uploadFile: UploadFile = {
-          ...fileToUploadFile(file),
+      const readyFile = fileToUploadFile(file);
+      const reportError = (reason: unknown, previousFile = readyFile) => {
+        const error =
+          reason instanceof Error
+            ? reason
+            : new Error(
+                typeof reason === 'object' &&
+                reason !== null &&
+                'message' in reason
+                  ? String(reason.message)
+                  : String(reason)
+              );
+        const failedFile: UploadFile = {
+          ...previousFile,
           status: 'error',
-          error: `File size exceeds ${formatFileSize(maxSize)}`,
+          error: error.message,
         };
-        setFileList(prevList => [...prevList, uploadFile]);
-        onChange?.(uploadFile);
+        setFileList(previous =>
+          previous.some(item => item.uid === failedFile.uid)
+            ? previous.map(item =>
+                item.uid === failedFile.uid ? failedFile : item
+              )
+            : [...previous, failedFile]
+        );
+        onError?.(error, failedFile);
+        onChange?.(failedFile);
+      };
+
+      if (maxSize && file.size > maxSize) {
+        reportError(new Error(`File size exceeds ${formatFileSize(maxSize)}`));
         return;
       }
 
-      const processUpload = (shouldUpload: boolean) => {
-        if (shouldUpload) {
-          const uploadFile = fileToUploadFile(file);
-          setFileList(prevList => [...prevList, uploadFile]);
-          onChange?.(uploadFile);
-          uploadFile.status = 'uploading';
-          uploadFile.percent = 0;
-          onChange?.(uploadFile);
+      const startUpload = async () => {
+        let allowed: boolean;
+        try {
+          allowed = beforeUpload ? await beforeUpload(file) : true;
+        } catch (error) {
+          reportError(error);
+          return;
+        }
+        if (!allowed) return;
 
-          // Use custom request function or default XHR
-          const uploadPromise = customRequest
+        setFileList(previous => [...previous, readyFile]);
+        onChange?.(readyFile);
+        const uploadingFile: UploadFile = {
+          ...readyFile,
+          status: 'uploading',
+          percent: 0,
+        };
+        setFileList(previous =>
+          previous.map(item =>
+            item.uid === uploadingFile.uid ? uploadingFile : item
+          )
+        );
+        onChange?.(uploadingFile);
+
+        let response: Record<string, unknown>;
+        try {
+          response = await (customRequest
             ? customRequest(file)
-            : defaultUploadRequest(file, uploadFile);
-
-          uploadPromise
-            .then(res => {
-              const updatedFile = {
-                ...uploadFile,
-                status: 'success' as const,
-                percent: 100,
-              };
-              setFileList(prevList =>
-                prevList.map(item =>
-                  item.uid === uploadFile.uid ? updatedFile : item
-                )
-              );
-              onSuccess?.(res, updatedFile);
-              onChange?.(updatedFile);
-            })
-            .catch(err => {
-              const updatedFile = {
-                ...uploadFile,
-                status: 'error' as const,
-                error: err.message,
-              };
-              setFileList(prevList =>
-                prevList.map(item =>
-                  item.uid === uploadFile.uid ? updatedFile : item
-                )
-              );
-              onError?.(err, updatedFile);
-              onChange?.(updatedFile);
-            });
+            : defaultUploadRequest(file, uploadingFile));
+        } catch (error) {
+          reportError(error, uploadingFile);
+          return;
         }
+        const successfulFile: UploadFile = {
+          ...uploadingFile,
+          status: 'success',
+          percent: 100,
+        };
+        setFileList(previous =>
+          previous.map(item =>
+            item.uid === successfulFile.uid ? successfulFile : item
+          )
+        );
+        onSuccess?.(response, successfulFile);
+        onChange?.(successfulFile);
       };
-
-      if (beforeUpload) {
-        const result = beforeUpload(file);
-        if (result instanceof Promise) {
-          result.then(processUpload);
-        } else {
-          processUpload(result);
-        }
-      } else {
-        processUpload(true);
-      }
+      void startUpload();
     });
   };
 
