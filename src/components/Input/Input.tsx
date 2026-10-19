@@ -10,6 +10,8 @@ import React, {
 } from 'react';
 import './Input.scss';
 
+const emptySuggestions: string[] = [];
+
 export type InputSize = 'lg' | 'sm';
 
 export interface InputProps
@@ -63,7 +65,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       className = '',
       style,
       autocomplete,
-      suggestions = [],
+      suggestions = emptySuggestions,
       onChange,
       onSelectSuggestion,
       ...restProps
